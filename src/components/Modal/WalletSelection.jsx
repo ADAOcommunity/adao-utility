@@ -24,7 +24,7 @@ import {
   InfoIcon,
   WarningIcon,
 } from "@chakra-ui/icons";
-import { fromAscii } from "../../cardano/market/utils";
+import { fromAscii } from "../../cardano/util/utils";
 import { UnitDisplay } from "../UnitDisplay";
 import { useStoreActions, useStoreState } from "easy-peasy";
 
