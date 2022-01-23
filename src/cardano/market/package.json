@@ -10,6 +10,8 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@cardano-ogmios/client": "^5.0.0",
+    "@cardano-ogmios/schema": "^5.0.0",
     "node-fetch": "^3.0.0"
   }
 }

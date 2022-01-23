@@ -17,6 +17,8 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "@cardano-ogmios/client": "^5.0.0",
+    "@cardano-ogmios/schema": "^5.0.0",
     "@chakra-ui/gatsby-plugin": "^2.0.1",
     "@chakra-ui/icons": "^1.0.15",
     "@chakra-ui/react": "^1.6.7",

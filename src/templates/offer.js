@@ -40,6 +40,7 @@ import { useMemo } from "react";
 import * as yup from "yup";
 
 import Market from "../cardano/market";
+import { getBalanceUtil } from "../cardano/market";
 import { fromAscii, assetsToValue, assetsToDatum } from "../cardano/market/utils";
 import { Address } from "../cardano/market/custom_modules/@emurgo/cardano-serialization-lib-browser/cardano_serialization_lib";
 
@@ -88,6 +89,11 @@ const Profile = ({ pageContext: { g } }) => {
   }
 
   const useInputs = async () => {
+    console.log("next")
+    let x = await getBalanceUtil("addr1vxt75qggnjzy62j4d84zqazqnznl9hzv8azsz5xwkmm26ns5xex4l");
+    // market.current.balanceRequest()
+    console.log(x)
+    console.log(JSON.stringify(x))
     if (tradeType == 1) {
       try {
         market.current.offer(assetsToValue(offerList), assetsToValue(requestList), "");

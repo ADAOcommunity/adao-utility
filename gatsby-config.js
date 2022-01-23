@@ -1,5 +1,5 @@
 module.exports = {
-  pathPrefix: `/nft-hawkr`,
+  pathPrefix: `/adao-utility`,
   plugins: [
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
