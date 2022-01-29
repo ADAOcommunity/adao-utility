@@ -27,6 +27,7 @@ import {
 import { fromAscii } from "../../cardano/util/utils";
 import { UnitDisplay } from "../UnitDisplay";
 import { useStoreActions, useStoreState } from "easy-peasy";
+// import { CreateProposal } from ".";
 
 const toUnit = (amount, decimals = 6) => {
   const result = parseFloat(amount.replace(/[,\s]/g, ""))
@@ -39,7 +40,7 @@ const toUnit = (amount, decimals = 6) => {
 
 const isBrowser = () => typeof window !== "undefined";
 
-const WalletSelection = () => {
+const CreateProposal = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const addOffer = useStoreActions(
       (actions) => actions.offers.addOffer
@@ -102,12 +103,12 @@ const WalletSelection = () => {
 
     return (
       <>
-        <Button onClick={onOpen}>Select Assets to Provide</Button>
+        <Button onClick={onOpen}>Select Assets for New Proposal</Button>
 
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Add an asset that you will send.</ModalHeader>
+            <ModalHeader>Select asset to add to proposal.</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <PolicyInput/>
@@ -120,7 +121,7 @@ const WalletSelection = () => {
               <Button colorScheme='blue' mr={3} onClick={onClose}>
                 Close
               </Button>
-              <Button variant='ghost' onClick={addAssets}>Add Asset to Offer</Button>
+              <Button variant='ghost' onClick={addAssets}>Add Asset to Proposal</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
@@ -128,4 +129,4 @@ const WalletSelection = () => {
     );
   }
 
-export default WalletSelection;
+export default CreateProposal;

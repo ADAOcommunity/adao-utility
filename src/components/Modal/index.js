@@ -1,5 +1,5 @@
 import ShareModal from "./Share";
-import WalletSelection from "./WalletSelection";
+import CreateProposal from "./CreateProposal";
 import RequestSelection from "./RequestSelection";
 import TradeModal, {
   FailedTransactionToast,
@@ -11,7 +11,7 @@ import TradeModal, {
 export {
   ShareModal,
   TradeModal,
-  WalletSelection,
+  CreateProposal,
   RequestSelection,
   FailedTransactionToast,
   SuccessTransactionToast,

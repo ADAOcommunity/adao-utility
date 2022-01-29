@@ -5,7 +5,7 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import { FloatingButton } from "../components/Button";
 import {
   ShareModal,
-  WalletSelection,
+  CreateProposal,
   RequestSelection,
   TradeModal,
   SuccessTransactionToast,
@@ -39,8 +39,8 @@ import { Observer, observer } from "mobx-react";
 import { useMemo } from "react";
 import * as yup from "yup";
 
-import Market from "../cardano/util";
-import { getBalanceUtil } from "../cardano/util";
+// import { loadUtils } from "../cardano/util";
+import { loadUtils, applyVoteUtil, depositUtil, createProposalUtil } from "../cardano/util";
 import { fromAscii, assetsToValue, assetsToDatum } from "../cardano/util/utils";
 import { Address } from "../cardano/util/custom_modules/@emurgo/cardano-serialization-lib-browser/cardano_serialization_lib";
 
@@ -56,9 +56,10 @@ const Profile = ({ pageContext: { g } }) => {
   // const [address, setAddress] = React.useState("");
   const [tradeType, setTradeType] = React.useState('1');
   const market = React.useRef();
-  let [addressIn, setAddressIn] = React.useState('');
+  let [addressIn, setAddressIn] = React.useState(''); // TODO - This should have a default for the rats and for adao
   React.useEffect(() => {
-    loadMarket();
+    // loadMarket();
+    loadUtils();
   }, []);
   const connected = useStoreState((state) => state.connection.connected);
   const firstUpdate = React.useRef(true);
@@ -78,7 +79,7 @@ const Profile = ({ pageContext: { g } }) => {
   const didMount = React.useRef(false);
   const isFirstConnect = React.useRef(true);
 
-  const loadMarket = async () => {
+  /* const loadMarket = async () => {
     market.current = new Market(
       {
         base: "https://cardano-testnet.blockfrost.io/api/v0",
@@ -86,42 +87,36 @@ const Profile = ({ pageContext: { g } }) => {
       }
     );
     await market.current.load();
-  }
+  }*/
 
-  const useInputs = async () => {
-    console.log("next")
-    let x = await getBalanceUtil("addr1vxt75qggnjzy62j4d84zqazqnznl9hzv8azsz5xwkmm26ns5xex4l");
-    // market.current.balanceRequest()
-    console.log(x)
-    console.log(JSON.stringify(x))
-    if (tradeType == 1) {
-      try {
-        market.current.offer(assetsToValue(offerList), assetsToValue(requestList), "");
-      } catch (e) {}
-    }
-    if (tradeType == 2) {
-      try {
-        market.current.purchase(addressIn, assetsToValue(requestList), assetsToValue(offerList));
-      } catch (e) {}
-    }
-  }
-
-  const cancelOffer = async () => {
+  const deposit = async () => {
     try {
-      market.current.cancelOffer(addressIn, assetsToValue(offerList), assetsToValue(requestList))
+      depositUtil(addressIn, assetsToValue(requestList));
     } catch (e) {}
   }
 
-  function PurchaseOrOffer() {
+  const createProposal = async () => {
+    try {
+      createProposalUtil(addressIn, assetsToValue(offerList));
+    } catch (e) {}
+  }
+
+  const voteProposal = async () => {
+    try {
+      applyVoteUtil(addressIn, assetsToValue(offerList));
+    } catch (e) {}
+  }
+
+  /*function PurchaseOrOffer() {
     return (
       <RadioGroup onChange={setTradeType} value={tradeType}>
         <Stack direction='row'>
-          <Radio value='1'>Offer</Radio>
-          <Radio value='2'>Purchase</Radio>
+          <Radio value='1'>Deposit</Radio>
+          <Radio value='2'>Proposal</Radio>
         </Stack>
       </RadioGroup>
     )
-  }
+  }*/
 
   const AddressInput = () => {
     [addressIn, setAddressIn] = React.useState("");
@@ -132,7 +127,7 @@ const Profile = ({ pageContext: { g } }) => {
         <Input
           value={addressIn}
           onChange={handleChange}
-          placeholder="Address of TradeOwner (If purchasing) or Private Recipient (coming soon - if putting up an offer)."
+          placeholder="Address of the Treasury / Address of the Individual to receive funds (not a contract)"
         />
       </>
     );
@@ -141,9 +136,9 @@ const Profile = ({ pageContext: { g } }) => {
   return (
     <>
       <Metadata
-        titleTwitter="NFT HAWKER: A one stop shop for your Escrow needs."
-        title="NFT HAWKR | OFFER"
-        description="Make a public or private offer."
+        titleTwitter="Developed by @ADAOcommunity as an open source project to assist the @RatsDAO community."
+        title="RatsDAO UI - In testing"
+        description="Create or vote on a proposal"
       />
       <div
         style={{
@@ -156,19 +151,23 @@ const Profile = ({ pageContext: { g } }) => {
           marginTop: 150,
         }}
       >
-          <WalletSelection/>
+          <CreateProposal/>
           <RequestSelection/>
-          <PurchaseOrOffer/>
           <AddressInput/>
           <Button
-            onClick={useInputs}
+            onClick={deposit}
           >
-            Offer/Purchase
+            Send to Treasury
           </Button>
           <Button
-            onClick={cancelOffer}
+            onClick={createProposal}
           >
-            Cancel Offer
+            Create Proposal
+          </Button>
+          <Button
+            onClick={voteProposal}
+          >
+            Apply Vote on Proposal
           </Button>
           {/* <Spacer y={3} /> */}
           {/*<Box h={10} />*/}

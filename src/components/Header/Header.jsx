@@ -88,7 +88,7 @@ const Header = () => {
               window.scrollTo(0, 0);
             }}
           >
-            Trade
+            Govern
           </Tab>
           <Box w={7} />
           <Tab
