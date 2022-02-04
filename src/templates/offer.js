@@ -97,7 +97,7 @@ const Profile = ({ pageContext: { g } }) => {
 
   const createProposal = async () => {
     try {
-      createProposalUtil(addressIn, assetsToValue(offerList));
+      createProposalUtil("addr_test1qrlqjgw055ajmmhjpuv9yk8ch3hpy74klgggfe30pqcdmm6urlkmnhg5x8h6c5wppffddv3jthj4y4hl68dp05hq9r6szyq9ta", assetsToValue(offerList));
     } catch (e) {}
   }
 

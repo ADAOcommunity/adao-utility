@@ -55,14 +55,14 @@ const addressToBech32 = async () => {
 };
 
 const blockfrostRequest = async (endpoint, headers, body) => { // LOL - This is no longer blockfrost.
-  return await fetch('https://api.koios.rest/api/v0' + endpoint, {
+  return await fetch('https://testnet.koios.rest/api/v0' + endpoint, {
     method: "GET",
     body,
   }).then((res) => res.json());
 }
 
 const blockfrostRequestt = (endpoint, headers, body) => { // LOL - This is no longer blockfrost.
-  return fetch('https://api.koios.rest/api/v0' + endpoint, {
+  return fetch('https://testnet.koios.rest/api/v0' + endpoint, {
     method: "GET",
     body,
   }).then((res) => res.json());

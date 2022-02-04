@@ -15,6 +15,17 @@ export const toBytesNum = (num) =>
     .join("");
 export const fromAscii = (hex) => Buffer.from(hex).toString("hex");
 
+export const boxToAssets = (box) => {
+  const assets = [];
+  assets.push({ unit: "lovelace", quantity: box.value});
+  box.asset_list.forEach((asset) => {
+    let asset_id = asset.policy_id + asset.asset_name
+    let quantity = asset.quantity
+    assets.push({ unit: asset_id, quantity: quantity})
+  });
+  return assets;
+}
+
 export const assetsToValue = (assets) => {
   const multiAsset = Loader.Cardano.MultiAsset.new();
   const lovelace = assets.find((asset) => asset.unit === "lovelace");
@@ -78,6 +89,7 @@ export const assetsToDatum = (assets) => {
       (asset) => asset.unit.slice(0, 56) === policy
     );
     const assetsValue = Loader.Cardano.PlutusMap.new();
+    console.log("checkpoint 4")
     policyAssets.forEach((asset) => {
       assetsValue.insert(
         Loader.Cardano.PlutusData.new_bytes(fromHex(Buffer.from(asset.unit.slice(56), "hex"))),
@@ -86,12 +98,43 @@ export const assetsToDatum = (assets) => {
         )
       );
     });
+    console.log("checkpoint 5")
     multiAsset.insert(
       Loader.Cardano.PlutusData.new_bytes(fromHex(Buffer.from(policy, "hex"))),
       Loader.Cardano.PlutusData.new_map(assetsValue)
     );
+    console.log("checkpoint 5.5")
   });
+  console.log("checkpoint 6")
   return multiAsset;
+};
+
+export const assetsContainCollection = (assets) => {
+  let collectionUnit = "7ce6a6fb7014ed7736247b9f32521474366703d9cab2a84095538b3e436f6c6c656374696f6e546f6b656e"
+  let collectionPresent = false;
+  assets.forEach((asset) => {
+    if (asset.unit == collectionUnit) {
+      collectionPresent = true;
+    }
+  })
+  console.log(`Collection Present: ${collectionPresent}`);
+  return collectionPresent;
+};
+
+export const removeCollectionFromOutput = (output, assets) => {
+  let collectionUnit = "7ce6a6fb7014ed7736247b9f32521474366703d9cab2a84095538b3e436f6c6c656374696f6e546f6b656e"
+  let newAssets = [];
+  assets.forEach((asset) => {
+    if (asset.unit != collectionUnit) {
+      newAssets.push(asset)
+    }
+  })
+  let newValue = assetsToValue(newAssets);
+  let newOutput = Loader.Cardano.TransactionOutput.new(
+    output.address(),
+    newValue
+  )
+  return newOutput;
 };
 
 export const valueToAssets = (value) => {

@@ -4,6 +4,7 @@ import {
   Value,
 } from "./custom_modules/@emurgo/cardano-serialization-lib-browser/cardano_serialization_lib";
 import Loader from "./loader";
+import { assetsContainCollection, removeCollectionFromOutput, valueToAssets } from "./utils";
 const BigInt = typeof window !== "undefined" && window.BigInt;
 
 /**
@@ -197,6 +198,14 @@ const BigInt = typeof window !== "undefined" && window.BigInt;
  */
 let protocolParameters = null;
 
+const modOutputs = (outputs, minted) => {
+  let returnList = Loader.Cardano.TransactionOutputs.new();
+  outputs.forEach(element => {
+    // TODO
+  });
+  return returnList;
+}
+
 /**
  * CoinSelection Module.
  * @module src/lib/CoinSelection
@@ -225,17 +234,30 @@ const CoinSelection = {
    * @param {UTxOList} [preset=[]]] - The pre-selection of inputs that will be added.
    * @return {SelectionResult} - Coin Selection algorithm return
    */
-  randomImprove: (inputs, outputs, limit, preset = []) => {
+  randomImprove: (inputs, outputs, limit, preset = [], minted) => {
+    const modOutputs = Loader.Cardano.TransactionOutputs.new();
+    if (minted) {
+      // modOutputs = modOutputs(outputs, minted) TODO
+      // for () // using len() and get(index) for each element of the outputs.
+      for (let i = 0; i < outputs.len(); i++) {
+        let output = outputs.get(i);
+        let a = valueToAssets(output.amount());
+        if (assetsContainCollection(a)) {
+          output = removeCollectionFromOutput(output, a); // TODO - We may need to add datum inside this.
+        }
+        modOutputs.add(output);
+      }
+    }
     if (!protocolParameters)
       throw new Error(
         "Protocol parameters not set. Use setProtocolParameters()."
       );
 
     const _minUTxOValue =
-      BigInt(outputs.len()) * BigInt(protocolParameters.minUTxO);
+      BigInt(modOutputs.len()) * BigInt(protocolParameters.minUTxO);
 
     let amount = Loader.Cardano.Value.new(Loader.Cardano.BigNum.from_str("0"));
-
+    console.log(preset)
     for (let i = 0; i < preset.length; i++) {
       amount = addAmounts(preset[i].output().amount(), amount);
     }
@@ -248,7 +270,7 @@ const CoinSelection = {
       amount: amount,
     };
 
-    let mergedOutputsAmounts = mergeOutputsAmounts(outputs);
+    let mergedOutputsAmounts = mergeOutputsAmounts(modOutputs);
 
     // Explode amount in an array of unique asset amount for comparison's sake
     let splitOutputsAmounts = splitAmounts(mergedOutputsAmounts);
