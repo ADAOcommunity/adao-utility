@@ -1,7 +1,7 @@
 import { withPrefix } from "gatsby";
 import * as React from "react";
 import Market from "../cardano/util";
-import * as secrets from "../../secrets";
+//import * as secrets from "../../secrets";
 
 // styles
 const pageStyles = {

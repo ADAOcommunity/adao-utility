@@ -80,12 +80,11 @@ function hex_to_ascii(str1)
 
 const getImageHash = async (asset) => {
   let a = await asset
-  console.log(asset)
-  // let p = asset[0].policy_id
-  // let n = asset[0].asset_name_ascii
-  // return asset[0].minting_tx_metadata.json[p][n].image
-  // console.log(a)
-  return "QmWo4HYh4wwnZJ8s7Kz6Z7q76P6YLMyhsPy12rJSTewBqZ"
+  let p = a[0].policy_id
+  let n = a[0].asset_name_ascii
+  return a[0].minting_tx_metadata.json[p][n].image.replace("ipfs://","")
+  //console.log(a)
+  //return "QmWo4HYh4wwnZJ8s7Kz6Z7q76P6YLMyhsPy12rJSTewBqZ"
 }
 
 const getAllAssets = async (addr) => {
@@ -108,6 +107,7 @@ const getAllAssets = async (addr) => {
       let policy = assetEncoded.slice(0, 56)
       let tokenName = Buffer.from(assetEncoded.slice(56), "hex")
       const asset = blockfrostRequestt(`/asset_info?_asset_policy=${policy}&_asset_name=${fromAscii(tokenName)}`) // break up by bytes and name.
+      console.log(getImageHash(asset));
       return {name: tokenName, image: await getImageHash(asset), encodedFullName: assetEncoded}
       /*if(asset.onchain_metadata && asset.onchain_metadata.name && asset.onchain_metadata.image) {
         return { name: asset.onchain_metadata.name, image: asset.onchain_metadata.image, encodedFullName: assetEncoded}
@@ -235,6 +235,7 @@ const RequestSelection = () => {
                 <Button variant='ghost' onClick={addAssets}>Add Asset to Offer</Button>
                 <Button onClick={() => loadWalletAssets().then(data => {
                 setWalletAssets(data)
+                console.log("data",data)
                 // console.log(walletAssets)
                 // let ast = walletAssets.find(wa => typeof(wa) !== "undefined" && wa.name == asset.name)
                 })}>Load assets from a wallet</Button>

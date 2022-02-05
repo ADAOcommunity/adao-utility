@@ -32,7 +32,7 @@ import {
 import { BeatLoader } from "react-spinners";
 import Icon from "@mdi/react";
 import { mdiOpenInNew } from "@mdi/js";
-import secrets from "../../secrets";
+//import secrets from "../../secrets";
 //import { Spinner } from "@chakra-ui/spinner";
 import { createField, createForm } from "mobx-easy-form";
 import { Observer, observer } from "mobx-react";
