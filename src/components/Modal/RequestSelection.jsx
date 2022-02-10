@@ -189,9 +189,11 @@ const RequestSelection = () => {
           let maxQuantity = 1
           let selectedFullName = policy + tName
           walletAssets.forEach((asset) => {
-            maxQuantity = asset.encodedFullName === selectedFullName ? maxQuantity = asset.quantity : 1
+            let assetPolicy=asset.encodedFullName.slice(0, 56)
+            let assetFullName=assetPolicy+Buffer.from(asset.encodedFullName.slice(56), "hex")
+            maxQuantity = assetFullName === selectedFullName ? maxQuantity = asset.quantity : maxQuantity
           })
-          let selectedQuantity = parse(valueString) > maxQuantity ? maxQuantity : parse(valueString)
+          let selectedQuantity = parseFloat(valueString) > parseFloat(maxQuantity) ? maxQuantity : parse(valueString)
           setTNum(selectedQuantity)
           }
         }
